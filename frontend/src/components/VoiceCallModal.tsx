@@ -6,9 +6,10 @@ interface VoiceCallModalProps {
   isOpen: boolean;
   onClose: () => void;
   advisoryType: 'weather' | 'support';
+  dynamicSummary?: string;
 }
 
-export default function VoiceCallModal({ isOpen, onClose, advisoryType }: VoiceCallModalProps) {
+export default function VoiceCallModal({ isOpen, onClose, advisoryType, dynamicSummary }: VoiceCallModalProps) {
   const { i18n } = useTranslation();
   const [callState, setCallState] = useState<'ringing' | 'connected' | 'ended'>('ringing');
   const [timer, setTimer] = useState(0);
@@ -19,11 +20,21 @@ export default function VoiceCallModal({ isOpen, onClose, advisoryType }: VoiceC
     // Determine text based on language and type
     const langCode = lang.split('-')[0];
     if (type === 'weather') {
+      if (dynamicSummary) {
+        // If a dynamic summary is passed (e.g. from the 30-day weather forecast), we can try to translate or just read it.
+        // For hackathon simplicity, we fallback to static localized if not English, or we could pass the English dynamic.
+        if (langCode === 'en') return dynamicSummary;
+        if (langCode === 'ta') return 'வணக்கம், உங்கள் அடுத்த 30 நாட்களுக்கான வானிலை அறிக்கை: அடுத்த வாரம் கனமழை பெய்ய வாய்ப்புள்ளது. தயவுசெய்து உங்கள் பயிர்களைப் பாதுகாக்கவும்.';
+        if (langCode === 'hi') return 'नमस्ते, आपके अगले ३० दिनों का मौसम पूर्वानुमान: अगले सप्ताह भारी बारिश की संभावना है। कृपया अपनी फसलों की रक्षा करें।';
+        if (langCode === 'te') return 'నమస్కారం, మీ రాబోయే 30 రోజుల వాతావరణ సూచన: వచ్చే వారం భారీ వర్షం పడే అవకాశం ఉంది. దయచేసి మీ పంటలను రక్షించండి.';
+      }
+      
+      // Default localized text if no dynamic summary
       if (langCode === 'ta') return 'வணக்கம், நாளை உங்கள் பகுதியில் கனமழை பெய்ய வாய்ப்புள்ளது. பூச்சிக்கொல்லி தெளிப்பதை தவிர்க்கவும்.';
       if (langCode === 'hi') return 'नमस्ते, कल आपके क्षेत्र में भारी बारिश की संभावना है। कृपया कीटनाशकों का छिड़काव करने से बचें।';
       if (langCode === 'te') return 'నమస్కారం, రేపు మీ ప్రాంతంలో భారీ వర్షం పడే అవకాశం ఉంది. దయచేసి పురుగుల మందులు చల్లకండి.';
-      // Default to english
-      return 'Hello, heavy rain is expected in your area tomorrow. Please avoid spraying pesticides and protect your harvested crops.';
+      
+      return dynamicSummary || 'Hello, heavy rain is expected in your area tomorrow. Please avoid spraying pesticides and protect your harvested crops.';
     } else {
       if (langCode === 'ta') return 'உழவன் கிசான் மையத்திற்கு உங்களை வரவேற்கிறோம். எங்கள் நிபுணர் விரைவில் இணைவார்.';
       if (langCode === 'hi') return 'उज़हावन किसान केंद्र में आपका स्वागत है। हमारे विशेषज्ञ जल्द ही जुड़ेंगे।';
