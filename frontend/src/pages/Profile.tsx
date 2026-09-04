@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, LogOut, Phone, MapPin, Maximize, Leaf, Layers, Calendar, PhoneCall, ChevronRight, Edit2, CheckCircle, Save } from 'lucide-react';
+import { ArrowLeft, LogOut, Phone, MapPin, Maximize, Leaf, Layers, Calendar, PhoneCall, ChevronRight, Edit2, CheckCircle, Save, Camera } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import ScanHub, { ScanMode } from '../components/ScanHub';
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -16,6 +17,10 @@ export default function Profile() {
     landUnit: 'Acres'
   });
   const [showToast, setShowToast] = useState(false);
+
+  // ScanHub State
+  const [isScanHubOpen, setIsScanHubOpen] = useState(false);
+  const [scanMode, setScanMode] = useState<ScanMode>('detect_crop');
 
   useEffect(() => {
     const userString = localStorage.getItem('uzhavan_user');
@@ -38,17 +43,41 @@ export default function Profile() {
     navigate('/login');
   };
 
-  const handleSave = () => {
+  const persistSave = (updatedData: any) => {
     if (user) {
-      const updatedUser = { ...user, ...editData };
+      const updatedUser = { ...user, ...updatedData };
       localStorage.setItem('uzhavan_user', JSON.stringify(updatedUser));
       setUser(updatedUser);
-      setIsEditing(false);
       
       // Show toast
       setShowToast(true);
       setTimeout(() => setShowToast(false), 3000);
     }
+  };
+
+  const handleSave = () => {
+    persistSave(editData);
+    setIsEditing(false);
+  };
+
+  const handleScanResult = (result: string) => {
+    let updatedData = { ...editData };
+    if (scanMode === 'detect_crop') {
+      updatedData.cropType = result;
+    } else if (scanMode === 'detect_soil') {
+      updatedData.soilType = result;
+    } else if (scanMode === 'measure_land') {
+      updatedData.landArea = result;
+      updatedData.landUnit = 'Acres';
+    }
+    
+    setEditData(updatedData);
+    persistSave(updatedData);
+  };
+
+  const openScan = (mode: ScanMode) => {
+    setScanMode(mode);
+    setIsScanHubOpen(true);
   };
 
   if (!user) return null;
@@ -134,13 +163,13 @@ export default function Profile() {
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col p-3 bg-gray-50 rounded-2xl">
-                <div className="flex items-center gap-2 mb-2">
+              <div className="flex flex-col p-3 bg-gray-50 rounded-2xl relative overflow-hidden group">
+                <div className="flex items-center gap-2 mb-2 relative z-10">
                   <div className="bg-white p-1.5 rounded-lg shadow-sm"><Maximize size={16} className="text-emerald-500" /></div>
                   <p className="text-[10px] text-gray-500 font-semibold uppercase">{t('land_area')}</p>
                 </div>
                 {isEditing ? (
-                  <div className="flex gap-1">
+                  <div className="flex gap-1 relative z-10">
                     <input 
                       type="number" 
                       value={editData.landArea} 
@@ -156,14 +185,19 @@ export default function Profile() {
                     </select>
                   </div>
                 ) : (
-                  <p className="font-medium text-gray-900 text-sm ml-1">
-                    {user.landArea ? `${user.landArea} ${user.landUnit || 'Acres'}`.replace('Acres Acres', 'Acres') : 'N/A'}
-                  </p>
+                  <div className="relative z-10 ml-1">
+                    <p className="font-medium text-gray-900 text-sm">
+                      {user.landArea ? `${user.landArea} ${user.landUnit || 'Acres'}`.replace('Acres Acres', 'Acres') : 'N/A'}
+                    </p>
+                    <button onClick={() => openScan('measure_land')} className="flex items-center gap-1 text-[10px] font-bold text-brand mt-1 hover:text-brand-dark transition-colors">
+                      <Camera size={12} /> Scan with AI
+                    </button>
+                  </div>
                 )}
               </div>
 
-              <div className="flex flex-col p-3 bg-gray-50 rounded-2xl">
-                <div className="flex items-center gap-2 mb-2">
+              <div className="flex flex-col p-3 bg-gray-50 rounded-2xl relative overflow-hidden group">
+                <div className="flex items-center gap-2 mb-2 relative z-10">
                   <div className="bg-white p-1.5 rounded-lg shadow-sm"><Leaf size={16} className="text-emerald-500" /></div>
                   <p className="text-[10px] text-gray-500 font-semibold uppercase">{t('crop_type')}</p>
                 </div>
@@ -171,19 +205,24 @@ export default function Profile() {
                   <select 
                     value={editData.cropType}
                     onChange={e => setEditData({...editData, cropType: e.target.value})}
-                    className="w-full bg-white text-xs font-bold p-1.5 rounded border border-gray-200"
+                    className="w-full bg-white text-xs font-bold p-1.5 rounded border border-gray-200 relative z-10"
                   >
                     {CROP_OPTIONS.map(c => <option key={c}>{c}</option>)}
                   </select>
                 ) : (
-                  <p className="font-medium text-gray-900 text-sm ml-1">{user.cropType || 'N/A'}</p>
+                  <div className="relative z-10 ml-1">
+                    <p className="font-medium text-gray-900 text-sm">{user.cropType || 'N/A'}</p>
+                    <button onClick={() => openScan('detect_crop')} className="flex items-center gap-1 text-[10px] font-bold text-brand mt-1 hover:text-brand-dark transition-colors">
+                      <Camera size={12} /> Scan with AI
+                    </button>
+                  </div>
                 )}
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col p-3 bg-gray-50 rounded-2xl">
-                <div className="flex items-center gap-2 mb-2">
+              <div className="flex flex-col p-3 bg-gray-50 rounded-2xl relative overflow-hidden group">
+                <div className="flex items-center gap-2 mb-2 relative z-10">
                   <div className="bg-white p-1.5 rounded-lg shadow-sm"><Layers size={16} className="text-emerald-500" /></div>
                   <p className="text-[10px] text-gray-500 font-semibold uppercase">{t('soil_type')}</p>
                 </div>
@@ -191,12 +230,17 @@ export default function Profile() {
                   <select 
                     value={editData.soilType}
                     onChange={e => setEditData({...editData, soilType: e.target.value})}
-                    className="w-full bg-white text-xs font-bold p-1.5 rounded border border-gray-200"
+                    className="w-full bg-white text-xs font-bold p-1.5 rounded border border-gray-200 relative z-10"
                   >
                     {SOIL_OPTIONS.map(s => <option key={s}>{s}</option>)}
                   </select>
                 ) : (
-                  <p className="font-medium text-gray-900 text-sm ml-1">{user.soilType || 'N/A'}</p>
+                  <div className="relative z-10 ml-1">
+                    <p className="font-medium text-gray-900 text-sm">{user.soilType || 'N/A'}</p>
+                    <button onClick={() => openScan('detect_soil')} className="flex items-center gap-1 text-[10px] font-bold text-brand mt-1 hover:text-brand-dark transition-colors">
+                      <Camera size={12} /> Scan with AI
+                    </button>
+                  </div>
                 )}
               </div>
 
@@ -227,6 +271,13 @@ export default function Profile() {
           </div>
         </Link>
       </div>
+
+      <ScanHub 
+        isOpen={isScanHubOpen}
+        onClose={() => setIsScanHubOpen(false)}
+        mode={scanMode}
+        onResult={handleScanResult}
+      />
     </div>
   );
 }
