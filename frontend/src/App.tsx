@@ -7,9 +7,7 @@ import AskComponent from './pages/Ask';
 import BazzarComponent from './pages/Bazzar';
 
 // Placeholder Pages
-const AskPage = () => <div className="p-4 text-center">Voice AI Coming Soon</div>;
 const CropsPage = () => <div className="p-4 text-center">My Crops Coming Soon</div>;
-const BazzarPage = () => <div className="p-4 text-center">Marketplace Coming Soon</div>;
 const ProfilePage = () => <div className="p-4 text-center">Profile Coming Soon</div>;
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
