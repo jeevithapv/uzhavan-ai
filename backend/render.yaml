@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: uzhavan-ai-backend
+    env: docker
+    region: singapore
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: DATABASE_URL
+        sync: false
