@@ -77,8 +77,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <div className="flex justify-around items-center h-20 px-2 pb-2">
           <NavLink to="/" icon={<Home size={24} />} label={t('home') || 'Home'} isActive={location.pathname === '/'} />
           <NavLink to="/ask" icon={<Mic size={24} />} label={t('ask') || 'Ask AI'} isActive={location.pathname === '/ask'} />
-          <NavLink to="/market" icon={<ShoppingCart size={24} />} label={'Market'} isActive={location.pathname === '/market'} />
-          <NavLink to="/profile" icon={<User size={24} />} label={'Profile'} isActive={location.pathname === '/profile'} />
+          <NavLink to="/market" icon={<ShoppingCart size={24} />} label={t('bazzar') || 'Market'} isActive={location.pathname === '/market'} />
+          <NavLink to="/profile" icon={<User size={24} />} label={t('profile') || 'Profile'} isActive={location.pathname === '/profile'} />
         </div>
       </nav>
     </div>
