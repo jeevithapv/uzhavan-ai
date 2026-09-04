@@ -1,21 +1,43 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation } from 'react-router-dom';
 import { Home, Mic, Leaf, ShoppingCart, User } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+
+// Pages
 import HomePageComponent from './pages/Home';
 import AskComponent from './pages/Ask';
-import BazzarComponent from './pages/Bazzar';
+import MarketComponent from './pages/Market';
+import ProfilePage from './pages/Profile';
+import LoginPage from './pages/Login';
+import RegisterPage from './pages/Register';
+import WeatherPage from './pages/Weather';
+import RecommendationPage from './pages/Recommendation';
+import DiseasePage from './pages/Disease';
+import SupportPage from './pages/Support';
 
-// Placeholder Pages
-const CropsPage = () => <div className="p-4 text-center">My Crops Coming Soon</div>;
-const ProfilePage = () => <div className="p-4 text-center">Profile Coming Soon</div>;
+// Protected Route Wrapper
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const user = localStorage.getItem('uzhavan_user');
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  return <>{children}</>;
+};
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { t, i18n } = useTranslation();
+  const location = useLocation();
 
   const toggleLanguage = () => {
     i18n.changeLanguage(i18n.language === 'en' ? 'ta' : 'en');
   };
+
+  // Don't show layout elements on auth pages
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+
+  if (isAuthPage) {
+    return <div className="h-screen bg-ui-background max-w-md mx-auto shadow-2xl overflow-hidden">{children}</div>;
+  }
 
   return (
     <div className="flex flex-col h-screen bg-ui-background max-w-md mx-auto shadow-2xl relative overflow-hidden">
@@ -24,13 +46,16 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <h1 className="text-xl font-bold text-brand-dark flex items-center gap-2">
           <span className="text-2xl">🌾</span> {t('app_name')}
         </h1>
-        <button 
-          onClick={toggleLanguage}
-          className="text-2xl hover:scale-110 transition-transform active:scale-95"
-          aria-label="Toggle Language"
-        >
-          {i18n.language === 'en' ? '🇮🇳' : 'A'}
-        </button>
+        <div className="flex items-center gap-2">
+           <span className="text-xs font-bold text-gray-500 uppercase">{i18n.language}</span>
+           <button 
+             onClick={toggleLanguage}
+             className="text-2xl hover:scale-110 transition-transform active:scale-95"
+             aria-label="Toggle Language"
+           >
+             {i18n.language === 'en' ? '🇮🇳' : 'A'}
+           </button>
+        </div>
       </header>
 
       {/* Main Content Area */}
@@ -41,11 +66,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       {/* Bottom Navigation */}
       <nav className="absolute bottom-0 w-full bg-white border-t border-gray-100 pb-safe z-20">
         <div className="flex justify-around items-center h-20 px-2 pb-2">
-          <NavLink to="/" icon={<Home size={28} />} label={t('home')} />
-          <NavLink to="/ask" icon={<Mic size={28} />} label={t('ask')} highlight />
-          <NavLink to="/crops" icon={<Leaf size={28} />} label={t('crops')} />
-          <NavLink to="/bazzar" icon={<ShoppingCart size={28} />} label={t('bazzar')} />
-          <NavLink to="/profile" icon={<User size={28} />} label={t('profile')} />
+          <NavLink to="/" icon={<Home size={28} />} label={t('home') || 'Home'} />
+          <NavLink to="/ask" icon={<Mic size={28} />} label={t('ask') || 'Ask AI'} highlight />
+          <NavLink to="/market" icon={<ShoppingCart size={28} />} label={'Market'} />
+          <NavLink to="/profile" icon={<User size={28} />} label={'Profile'} />
         </div>
       </nav>
     </div>
@@ -70,11 +94,17 @@ function App() {
     <Router>
       <Layout>
         <Routes>
-          <Route path="/" element={<HomePageComponent />} />
-          <Route path="/ask" element={<AskComponent />} />
-          <Route path="/crops" element={<CropsPage />} />
-          <Route path="/bazzar" element={<BazzarComponent />} />
-          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          
+          <Route path="/" element={<ProtectedRoute><HomePageComponent /></ProtectedRoute>} />
+          <Route path="/ask" element={<ProtectedRoute><AskComponent /></ProtectedRoute>} />
+          <Route path="/market" element={<ProtectedRoute><MarketComponent /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+          <Route path="/weather" element={<ProtectedRoute><WeatherPage /></ProtectedRoute>} />
+          <Route path="/recommendation" element={<ProtectedRoute><RecommendationPage /></ProtectedRoute>} />
+          <Route path="/disease" element={<ProtectedRoute><DiseasePage /></ProtectedRoute>} />
+          <Route path="/support" element={<ProtectedRoute><SupportPage /></ProtectedRoute>} />
         </Routes>
       </Layout>
     </Router>

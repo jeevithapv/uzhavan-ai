@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PlusCircle, Search } from 'lucide-react';
 
-const Bazzar = () => {
+const Market = () => {
   const { t } = useTranslation();
   const [tab, setTab] = useState<'buy' | 'sell'>('buy');
 
@@ -78,4 +78,4 @@ const Bazzar = () => {
   );
 };
 
-export default Bazzar;
+export default Market;

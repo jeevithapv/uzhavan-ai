@@ -29,34 +29,34 @@ const Home = () => {
       <div className="grid grid-cols-2 gap-4">
         <ActionCard 
           icon={<Mic size={40} className="text-brand" />}
-          label={t('ask_uzhavan')}
+          label={t('ask_uzhavan') || 'Ask Uzhavan'}
           onClick={() => navigate('/ask')}
           primary
         />
         <ActionCard 
           icon={<Camera size={40} className="text-orange-500" />}
-          label={t('check_disease')}
-          onClick={() => console.log('Go to disease check')}
+          label={t('check_disease') || 'Disease Scanner'}
+          onClick={() => navigate('/disease')}
         />
         <ActionCard 
           icon={<Leaf size={40} className="text-green-600" />}
-          label={t('my_crop')}
-          onClick={() => navigate('/crops')}
+          label={t('my_crop') || 'Crop Advice'}
+          onClick={() => navigate('/recommendation')}
         />
         <ActionCard 
           icon={<TrendingUp size={40} className="text-blue-500" />}
-          label={t('market_price')}
-          onClick={() => console.log('Go to market')}
+          label={t('market_price') || 'Market Insights'}
+          onClick={() => navigate('/market')}
         />
         <ActionCard 
-          icon={<ShoppingBag size={40} className="text-purple-500" />}
-          label={t('sell_crop')}
-          onClick={() => navigate('/bazzar')}
+          icon={<CloudSun size={40} className="text-blue-400" />}
+          label={'Weather'}
+          onClick={() => navigate('/weather')}
         />
         <ActionCard 
           icon={<ShieldCheck size={40} className="text-teal-500" />}
-          label={t('schemes')}
-          onClick={() => console.log('Go to schemes')}
+          label={t('schemes') || 'Kisan Helpline'}
+          onClick={() => navigate('/support')}
         />
       </div>
 
