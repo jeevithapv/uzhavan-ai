@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import { ArrowLeft, CloudRain, Sun, Thermometer, Droplets, Wind } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import VoiceCallModal from '../components/VoiceCallModal';
 
 export default function Weather() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('uzhavan_user') || '{}');
+  const [isCallOpen, setIsCallOpen] = useState(false);
 
   return (
     <div className="flex flex-col min-h-full bg-blue-50 pb-20">
@@ -47,8 +50,20 @@ export default function Weather() {
           <p className="text-gray-600 leading-relaxed text-sm">
             No rain expected in the next 48 hours. Good time for pesticide spraying and irrigation for your {user.cropType || 'crops'}. Avoid heavy fertilization until next week.
           </p>
+          <button 
+            onClick={() => setIsCallOpen(true)}
+            className="w-full mt-4 flex items-center justify-center gap-2 bg-brand text-white font-bold py-3 px-4 rounded-xl shadow-md hover:bg-brand-dark transition-colors"
+          >
+            📞 Request AI Voice Advisory Call
+          </button>
         </div>
       </div>
+      
+      <VoiceCallModal 
+        isOpen={isCallOpen} 
+        onClose={() => setIsCallOpen(false)} 
+        advisoryType="weather" 
+      />
     </div>
   );
 }

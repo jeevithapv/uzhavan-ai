@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import { ArrowLeft, PhoneCall, HeadphonesIcon, HelpCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import VoiceCallModal from '../components/VoiceCallModal';
 
 export default function Support() {
   const navigate = useNavigate();
+  const [isCallOpen, setIsCallOpen] = useState(false);
 
   return (
     <div className="flex flex-col min-h-full bg-ui-background pb-20">
@@ -26,10 +29,13 @@ export default function Support() {
         </a>
 
         <div className="grid grid-cols-2 gap-4 mt-6">
-          <div className="bg-white p-6 rounded-3xl shadow-soft text-center border border-gray-100">
+          <div 
+            onClick={() => setIsCallOpen(true)}
+            className="bg-white p-6 rounded-3xl shadow-soft text-center border border-gray-100 cursor-pointer hover:bg-gray-50 active:scale-95 transition-all"
+          >
             <HeadphonesIcon size={32} className="text-emerald-500 mx-auto mb-3" />
             <h3 className="font-bold text-gray-800">Book Expert</h3>
-            <p className="text-xs text-gray-500 mt-1">Schedule a video call</p>
+            <p className="text-xs text-gray-500 mt-1">Schedule a voice call</p>
           </div>
           
           <div className="bg-white p-6 rounded-3xl shadow-soft text-center border border-gray-100">
@@ -39,6 +45,12 @@ export default function Support() {
           </div>
         </div>
       </div>
+
+      <VoiceCallModal 
+        isOpen={isCallOpen} 
+        onClose={() => setIsCallOpen(false)} 
+        advisoryType="support" 
+      />
     </div>
   );
 }

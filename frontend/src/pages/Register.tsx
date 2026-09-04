@@ -101,7 +101,13 @@ export default function Register() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-ui-background">
       <div className="w-full max-w-md card bg-white p-6 rounded-3xl shadow-soft">
-        <h2 className="text-2xl font-bold text-brand-dark mb-6 text-center">Farmer Registration</h2>
+        <div className="flex flex-col items-center mb-6 text-center">
+          <img src="/logo.png" alt="Uzhavan AI Logo" className="h-16 w-auto object-contain mb-3" />
+          <p className="text-xs font-semibold text-brand mb-4 px-2 tracking-wide leading-tight">
+            உழவன் AI — One voice-first AI companion and one direct marketplace
+          </p>
+          <h2 className="text-2xl font-bold text-brand-dark">Farmer Registration</h2>
+        </div>
         
         {error && <div className="mb-4 p-3 bg-red-100 text-red-600 rounded-xl text-sm text-center">{error}</div>}
 

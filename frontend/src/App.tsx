@@ -28,10 +28,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const { t, i18n } = useTranslation();
   const location = useLocation();
 
-  const toggleLanguage = () => {
-    i18n.changeLanguage(i18n.language === 'en' ? 'ta' : 'en');
-  };
-
   // Don't show layout elements on auth pages
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
 
@@ -44,17 +40,27 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       {/* Header */}
       <header className="p-4 flex justify-between items-center bg-white shadow-sm z-10">
         <h1 className="text-xl font-bold text-brand-dark flex items-center gap-2">
-          <span className="text-2xl">🌾</span> {t('app_name')}
+          <img src="/logo.png" alt="Uzhavan AI Logo" className="h-8 w-auto object-contain" />
+          {t('app_name')}
         </h1>
-        <div className="flex items-center gap-2">
-           <span className="text-xs font-bold text-gray-500 uppercase">{i18n.language}</span>
-           <button 
-             onClick={toggleLanguage}
-             className="text-2xl hover:scale-110 transition-transform active:scale-95"
-             aria-label="Toggle Language"
+        <div className="flex items-center">
+           <select 
+             value={i18n.language}
+             onChange={(e) => {
+               i18n.changeLanguage(e.target.value);
+               localStorage.setItem('uzhavan_lang', e.target.value);
+             }}
+             className="bg-gray-100 text-sm font-bold text-gray-700 rounded-lg px-2 py-1 outline-none focus:ring-2 focus:ring-brand"
            >
-             {i18n.language === 'en' ? '🇮🇳' : 'A'}
-           </button>
+             <option value="en">EN</option>
+             <option value="ta">தமிழ்</option>
+             <option value="hi">हिंदी</option>
+             <option value="te">తెలుగు</option>
+             <option value="kn">ಕನ್ನಡ</option>
+             <option value="ml">മലയാളം</option>
+             <option value="mr">मराठी</option>
+             <option value="bn">বাংলা</option>
+           </select>
         </div>
       </header>
 

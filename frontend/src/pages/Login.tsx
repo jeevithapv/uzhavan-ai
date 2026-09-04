@@ -35,12 +35,13 @@ export default function Login() {
   return (
     <div className="flex flex-col items-center justify-center h-full p-6 bg-ui-background">
       <div className="w-full max-w-sm card bg-white p-8 rounded-3xl shadow-soft">
-        <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 bg-brand-light rounded-full flex items-center justify-center mb-4">
-            <LogIn size={32} className="text-brand" />
-          </div>
+        <div className="flex flex-col items-center mb-8 text-center">
+          <img src="/logo.png" alt="Uzhavan AI Logo" className="h-16 w-auto object-contain mb-4" />
+          <p className="text-xs font-semibold text-brand mb-4 px-2 tracking-wide leading-tight">
+            உழவன் AI — One voice-first AI companion and one direct marketplace
+          </p>
           <h2 className="text-2xl font-bold text-brand-dark">Welcome Back</h2>
-          <p className="text-ui-muted text-center mt-2">Login to your Uzhavan AI account</p>
+          <p className="text-ui-muted mt-2">Login to your Uzhavan AI account</p>
         </div>
 
         {error && <div className="mb-4 p-3 bg-red-100 text-red-600 rounded-xl text-sm text-center">{error}</div>}
