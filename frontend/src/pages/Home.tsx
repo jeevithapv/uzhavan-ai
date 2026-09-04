@@ -15,46 +15,21 @@ const Home = () => {
     <div className="flex flex-col bg-gray-50 min-h-full pb-20">
       
       {/* Hero Visual Layer */}
-      <div className="relative h-64 w-full bg-black rounded-b-3xl overflow-hidden shadow-lg">
-        {/* Background Image */}
+      <div className="relative w-full aspect-video bg-black rounded-b-3xl overflow-hidden shadow-lg border-b border-gray-200">
+        {/* Background Image containing the brand text */}
         <img 
-          src="/hero_bg.png" 
-          alt="Tea Plantation Background" 
-          className="absolute inset-0 w-full h-full object-cover opacity-80"
+          src="/hero_bg.jpg" 
+          alt="Uzhavan AI Hero Banner" 
+          className="absolute inset-0 w-full h-full object-cover"
         />
         
-        {/* Gradient Overlay for Text Readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
-
-        {/* Top Header Row (Inside Hero) */}
-        <div className="absolute top-0 left-0 w-full p-4 flex justify-between items-center text-white z-10">
-          <div className="flex items-center gap-2">
-            <img src="/logo.png" alt="Logo" className="h-6 w-auto brightness-0 invert" />
-            <span className="font-bold tracking-wide">Uzhavan AI</span>
-          </div>
-          <span className="text-xs font-bold bg-white/20 px-2 py-1 rounded-md backdrop-blur-sm">IN</span>
-        </div>
-
-        {/* Hero Content */}
-        <div className="absolute bottom-4 left-4 right-4 z-10 flex justify-between items-end">
-          <div>
-            <h2 className="text-white/90 text-sm font-medium flex items-center gap-1 mb-1">
-              Your Farming Companion <Leaf size={14} className="text-brand" />
-            </h2>
-            <h3 className="text-2xl font-bold text-white">Vanakkam, {firstName} 👋</h3>
-          </div>
-          
-          <div className="text-right">
-            <div className="flex items-center gap-1 text-white text-xl font-bold">
-              32°C <CloudSun size={24} className="text-yellow-300" />
-            </div>
-            <p className="text-white/80 text-xs">Chennai</p>
-          </div>
-        </div>
+        {/* Subtle gradient for transition to the white area */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
       </div>
 
       {/* Main Feature Grid */}
       <div className="p-4 mt-2">
+        <h3 className="text-xl font-bold text-gray-800 mb-4 px-1">Vanakkam, {firstName} 👋</h3>
         <div className="grid grid-cols-2 gap-4">
           <ActionCard 
             icon={<Mic size={32} className="text-brand" />}
