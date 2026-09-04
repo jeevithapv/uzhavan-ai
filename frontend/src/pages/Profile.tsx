@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, LogOut, Phone, MapPin, Maximize, Leaf, Layers, Calendar, PhoneCall, ChevronRight, Edit2, CheckCircle, Save, Camera } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import ScanHub, { ScanMode } from '../components/ScanHub';
+import ScanHub from '../components/ScanHub';
+import type { ScanMode } from '../components/ScanHub';
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -120,13 +121,41 @@ export default function Profile() {
         </button>
       </div>
 
-      <div className="p-4 space-y-6">
-        {/* Main Profile Card */}
-        <div className="bg-white rounded-3xl shadow-soft p-6 border border-gray-100 relative">
+      <div className="p-4 md:p-8 space-y-6 md:space-y-0 md:grid md:grid-cols-2 md:gap-8">
+        
+        {/* Left Column (Desktop) */}
+        <div className="space-y-6">
+          <div className="bg-white rounded-3xl shadow-soft p-6 border border-gray-100 flex flex-col items-center">
+            <div className="w-32 h-32 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-4xl font-bold mb-4 shadow-inner">
+              {initials}
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900">{user.fullName || 'Farmer'}</h2>
+            <p className="text-emerald-600 font-medium">{t('profile_title').includes('PROFILE') ? 'Farmer' : 'விவசாயி'}</p>
+          </div>
+
+          {/* Secondary Action Card */}
+          <Link to="/support" className="block">
+            <div className="bg-white rounded-3xl p-5 border-2 border-emerald-200 shadow-soft hover:shadow-md transition-shadow active:scale-95 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
+                  <PhoneCall size={24} className="text-emerald-600" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-gray-900">{t('call_history')}</h3>
+                  <p className="text-xs text-gray-500 font-medium">{t('view_consultations')}</p>
+                </div>
+              </div>
+              <ChevronRight size={24} className="text-gray-400" />
+            </div>
+          </Link>
+        </div>
+
+        {/* Right Column (Desktop) Main Profile Card */}
+        <div className="bg-white rounded-3xl shadow-soft p-6 border border-gray-100 relative h-fit">
           
           <button 
             onClick={() => isEditing ? handleSave() : setIsEditing(true)}
-            className={`absolute top-4 right-4 flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-sm ${
+            className={`absolute top-4 right-4 flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-sm z-10 ${
               isEditing ? 'bg-brand text-white shadow-brand/30' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
@@ -137,15 +166,7 @@ export default function Profile() {
             )}
           </button>
 
-          <div className="flex flex-col items-center mb-6 mt-4">
-            <div className="w-24 h-24 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl font-bold mb-3 shadow-inner">
-              {initials}
-            </div>
-            <h2 className="text-xl font-bold text-gray-900">{user.fullName || 'Farmer'}</h2>
-            <p className="text-emerald-600 font-medium">{t('profile_title').includes('PROFILE') ? 'Farmer' : 'விவசாயி'}</p>
-          </div>
-
-          <div className="space-y-4">
+          <div className="space-y-4 mt-8 md:mt-2">
             <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-2xl">
               <div className="bg-white p-2 rounded-xl shadow-sm"><Phone size={20} className="text-emerald-500" /></div>
               <div>
@@ -255,21 +276,6 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* Secondary Action Card */}
-        <Link to="/support" className="block">
-          <div className="bg-white rounded-3xl p-5 border-2 border-emerald-200 shadow-soft hover:shadow-md transition-shadow active:scale-95 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
-                <PhoneCall size={24} className="text-emerald-600" />
-              </div>
-              <div>
-                <h3 className="font-bold text-gray-900">{t('call_history')}</h3>
-                <p className="text-xs text-gray-500 font-medium">{t('view_consultations')}</p>
-              </div>
-            </div>
-            <ChevronRight size={24} className="text-gray-400" />
-          </div>
-        </Link>
       </div>
 
       <ScanHub 

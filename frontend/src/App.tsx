@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation } from 'react-router-dom';
-import { Home, Mic, Leaf, ShoppingCart, User } from 'lucide-react';
+import { Home, Mic, Leaf, ShoppingCart, User, CloudSun, PhoneCall } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 // Pages
@@ -33,18 +33,56 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const isHomePage = location.pathname === '/';
 
   if (isAuthPage) {
-    return <div className="h-screen bg-ui-background max-w-md mx-auto shadow-2xl overflow-hidden">{children}</div>;
+    // Auth screens can stay centered and compact
+    return <div className="min-h-screen bg-ui-background w-full flex items-center justify-center p-4">
+      <div className="w-full max-w-md shadow-2xl rounded-3xl overflow-hidden">{children}</div>
+    </div>;
   }
 
   return (
-    <div className="flex flex-col h-screen bg-ui-background max-w-md mx-auto shadow-2xl relative overflow-hidden">
-      {/* Header - Hidden on Home since Home has custom Hero Header */}
+    <div className="flex flex-col h-screen bg-ui-background w-full relative overflow-hidden">
+      {/* Desktop Header - Visible only on md and larger */}
+      <header className="hidden md:flex p-4 justify-between items-center bg-white shadow-sm z-20 sticky top-0 w-full px-8 lg:px-16">
+        <Link to="/" className="text-2xl font-bold text-brand-dark flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <img src="/logo.png" alt="Uzhavan AI Logo" className="h-10 w-auto object-contain" />
+          {t('app_name')}
+        </Link>
+        
+        {/* Desktop Nav Links */}
+        <div className="flex items-center gap-6 lg:gap-10">
+          <DesktopNavLink to="/" label={t('home') || 'Home'} isActive={location.pathname === '/'} />
+          <DesktopNavLink to="/ask" label={t('ask') || 'Ask AI'} isActive={location.pathname === '/ask'} />
+          <DesktopNavLink to="/weather" label={t('weather') || 'Weather'} isActive={location.pathname === '/weather'} />
+          <DesktopNavLink to="/market" label={t('bazzar') || 'Market'} isActive={location.pathname === '/market'} />
+          <DesktopNavLink to="/profile" label={t('profile') || 'Profile'} isActive={location.pathname === '/profile'} />
+          
+          <select 
+            value={i18n.language}
+            onChange={(e) => {
+              i18n.changeLanguage(e.target.value);
+              localStorage.setItem('uzhavan_lang', e.target.value);
+            }}
+            className="bg-gray-100 text-sm font-bold text-gray-700 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-brand ml-4 hover:bg-gray-200 transition-colors cursor-pointer"
+          >
+            <option value="en">EN</option>
+            <option value="ta">தமிழ்</option>
+            <option value="hi">हिंदी</option>
+            <option value="te">తెలుగు</option>
+            <option value="kn">ಕನ್ನಡ</option>
+            <option value="ml">മലയാളം</option>
+            <option value="mr">मराठी</option>
+            <option value="bn">বাংলা</option>
+          </select>
+        </div>
+      </header>
+
+      {/* Mobile Header - Hidden on Home, visible on other pages on mobile */}
       {!isHomePage && (
-        <header className="p-4 flex justify-between items-center bg-white shadow-sm z-10">
-          <h1 className="text-xl font-bold text-brand-dark flex items-center gap-2">
+        <header className="md:hidden p-4 flex justify-between items-center bg-white shadow-sm z-10">
+          <Link to="/" className="text-xl font-bold text-brand-dark flex items-center gap-2">
             <img src="/logo.png" alt="Uzhavan AI Logo" className="h-8 w-auto object-contain" />
             {t('app_name')}
-          </h1>
+          </Link>
           <div className="flex items-center">
             <select 
               value={i18n.language}
@@ -67,13 +105,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         </header>
       )}
 
-      {/* Main Content Area */}
-      <main className="flex-1 overflow-y-auto pb-24 no-scrollbar">
-        {children}
+      {/* Main Content Area - Expands to max width on desktop */}
+      <main className={`flex-1 overflow-y-auto no-scrollbar pb-24 md:pb-8 w-full ${isHomePage && 'md:pt-0'} mx-auto`}>
+        <div className="w-full md:max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto h-full shadow-none md:shadow-xl md:bg-white md:min-h-full">
+          {children}
+        </div>
       </main>
 
-      {/* Bottom Navigation */}
-      <nav className="absolute bottom-0 w-full bg-white border-t border-gray-100 pb-safe z-20">
+      {/* Bottom Navigation - Only visible on Mobile */}
+      <nav className="md:hidden absolute bottom-0 w-full bg-white border-t border-gray-100 pb-safe z-20">
         <div className="flex justify-around items-center h-20 px-2 pb-2">
           <NavLink to="/" icon={<Home size={24} />} label={t('home') || 'Home'} isActive={location.pathname === '/'} />
           <NavLink to="/ask" icon={<Mic size={24} />} label={t('ask') || 'Ask AI'} isActive={location.pathname === '/ask'} />
@@ -84,6 +124,17 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     </div>
   );
 };
+
+const DesktopNavLink = ({ to, label, isActive }: { to: string, label: string, isActive: boolean }) => (
+  <Link 
+    to={to} 
+    className={`font-bold text-sm tracking-wide transition-colors ${
+      isActive ? 'text-brand border-b-2 border-brand pb-1' : 'text-gray-500 hover:text-brand-dark'
+    }`}
+  >
+    {label}
+  </Link>
+);
 
 const NavLink = ({ to, icon, label, isActive }: { to: string, icon: React.ReactNode, label: string, isActive: boolean }) => {
   return (

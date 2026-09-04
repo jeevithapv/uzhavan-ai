@@ -28,9 +28,9 @@ const Home = () => {
       </div>
 
       {/* Main Feature Grid */}
-      <div className="p-4 mt-2">
-        <h3 className="text-xl font-bold text-gray-800 mb-4 px-1">Vanakkam, {firstName} 👋</h3>
-        <div className="grid grid-cols-2 gap-4">
+      <div className="p-4 md:p-8 mt-2">
+        <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 px-1 md:mb-6">Vanakkam, {firstName} 👋</h3>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
           <ActionCard 
             icon={<Mic size={32} className="text-brand" />}
             label={t('ask_uzhavan') || 'Ask Uzhavan'}

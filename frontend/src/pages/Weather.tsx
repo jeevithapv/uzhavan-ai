@@ -138,80 +138,88 @@ export default function Weather() {
         <h1 className="font-bold text-lg">{t('weather') || 'Weather Forecast'}</h1>
       </div>
 
-      <div className="p-4">
-        {/* Tabs */}
-        <div className="flex bg-white rounded-xl p-1 mb-4 shadow-sm border border-gray-100">
-          {(['today', '7-day', '30-day'] as const).map(tab => (
-            <button
-              key={tab}
-              onClick={() => setTimeRange(tab)}
-              className={`flex-1 py-2 text-sm font-bold rounded-lg capitalize transition-colors ${
-                timeRange === tab ? 'bg-brand text-white shadow' : 'text-gray-500 hover:text-brand'
-              }`}
-            >
-              {tab.replace('-', ' ')}
-            </button>
-          ))}
-        </div>
-
-        {/* Action Button */}
-        <button 
-          onClick={() => setIsCallOpen(true)}
-          className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-brand text-white font-bold py-3 px-4 rounded-2xl shadow-lg hover:opacity-90 transition-opacity mb-6"
-        >
-          📞 Request AI Voice Advisory Call
-        </button>
-
-        {/* Phase-wise Alerts */}
-        <div className="space-y-3 mb-6">
-          <h3 className="font-bold text-gray-800 px-1 text-sm uppercase tracking-wider">Agronomic Advisories</h3>
-          {advisories.map((adv, idx) => (
-            <div key={idx} className={`p-4 rounded-2xl border-l-4 shadow-sm bg-white ${
-              adv.type === 'warning' ? 'border-l-blue-500' : 
-              adv.type === 'alert' ? 'border-l-orange-500' : 'border-l-green-500'
-            }`}>
-              <div className="flex items-center gap-2 mb-1">
-                <Info size={16} className={
-                  adv.type === 'warning' ? 'text-blue-500' : 
-                  adv.type === 'alert' ? 'text-orange-500' : 'text-green-500'
-                } />
-                <h4 className="font-bold text-gray-800 text-sm">{adv.title}</h4>
-              </div>
-              <p className="text-xs text-gray-600 leading-relaxed">{adv.msg}</p>
+      <div className="p-4 md:p-8">
+        
+        <div className="md:grid md:grid-cols-2 md:gap-8">
+          
+          {/* Left Column (Desktop) */}
+          <div className="flex flex-col">
+            {/* Tabs */}
+            <div className="flex bg-white rounded-xl p-1 mb-4 shadow-sm border border-gray-100">
+              {(['today', '7-day', '30-day'] as const).map(tab => (
+                <button
+                  key={tab}
+                  onClick={() => setTimeRange(tab)}
+                  className={`flex-1 py-2 text-sm font-bold rounded-lg capitalize transition-colors ${
+                    timeRange === tab ? 'bg-brand text-white shadow' : 'text-gray-500 hover:text-brand'
+                  }`}
+                >
+                  {tab.replace('-', ' ')}
+                </button>
+              ))}
             </div>
-          ))}
-        </div>
 
-        {/* Forecast Timeline */}
-        <div className="bg-white rounded-3xl p-2 shadow-soft border border-gray-100 mb-4">
-          <div className="space-y-1">
-            {displayedForecast.map((day, idx) => (
-              <div key={idx} className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-2xl transition-colors border-b border-gray-50 last:border-0">
-                <div className="w-16">
-                  <p className="text-xs font-bold text-gray-800">
-                    {day.dayIndex === 0 ? 'Today' : day.date.toLocaleDateString('en-US', { weekday: 'short' })}
-                  </p>
-                  <p className="text-[10px] text-gray-400">{day.date.getDate()} {day.date.toLocaleDateString('en-US', { month: 'short' })}</p>
-                </div>
-                
-                <div className="flex-1 flex justify-center">
-                  {renderIcon(day.icon, "w-8 h-8")}
-                </div>
-                
-                <div className="w-24 flex items-center justify-between">
-                  <span className="font-bold text-gray-800">{day.tempMax}°</span>
-                  <span className="text-sm font-medium text-gray-400">{day.tempMin}°</span>
-                </div>
-                
-                <div className="w-12 text-right">
-                  <div className="flex items-center justify-end gap-1 text-[10px] font-bold text-blue-500">
-                    <CloudRain size={10} /> {day.pop}%
+            {/* Action Button */}
+            <button 
+              onClick={() => setIsCallOpen(true)}
+              className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-brand text-white font-bold py-3 px-4 rounded-2xl shadow-lg hover:opacity-90 transition-opacity mb-6"
+            >
+              📞 Request AI Voice Advisory Call
+            </button>
+
+            {/* Phase-wise Alerts */}
+            <div className="space-y-3 mb-6 md:mb-0">
+              <h3 className="font-bold text-gray-800 px-1 text-sm uppercase tracking-wider">Agronomic Advisories</h3>
+              {advisories.map((adv, idx) => (
+                <div key={idx} className={`p-4 rounded-2xl border-l-4 shadow-sm bg-white ${
+                  adv.type === 'warning' ? 'border-l-blue-500' : 
+                  adv.type === 'alert' ? 'border-l-orange-500' : 'border-l-green-500'
+                }`}>
+                  <div className="flex items-center gap-2 mb-1">
+                    <Info size={16} className={
+                      adv.type === 'warning' ? 'text-blue-500' : 
+                      adv.type === 'alert' ? 'text-orange-500' : 'text-green-500'
+                    } />
+                    <h4 className="font-bold text-gray-800 text-sm">{adv.title}</h4>
                   </div>
-                  <div className="text-[9px] text-gray-400">{day.rainMm > 0 ? `${day.rainMm}mm` : '-'}</div>
+                  <p className="text-xs text-gray-600 leading-relaxed">{adv.msg}</p>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
+
+          {/* Right Column (Desktop) Forecast Timeline */}
+          <div className="bg-white rounded-3xl p-2 shadow-soft border border-gray-100 mb-4 h-fit max-h-[70vh] overflow-y-auto no-scrollbar">
+            <div className="space-y-1">
+              {displayedForecast.map((day, idx) => (
+                <div key={idx} className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-2xl transition-colors border-b border-gray-50 last:border-0">
+                  <div className="w-16">
+                    <p className="text-xs font-bold text-gray-800">
+                      {day.dayIndex === 0 ? 'Today' : day.date.toLocaleDateString('en-US', { weekday: 'short' })}
+                    </p>
+                    <p className="text-[10px] text-gray-400">{day.date.getDate()} {day.date.toLocaleDateString('en-US', { month: 'short' })}</p>
+                  </div>
+                  
+                  <div className="flex-1 flex justify-center">
+                    {renderIcon(day.icon, "w-8 h-8")}
+                  </div>
+                  
+                  <div className="w-24 flex items-center justify-between">
+                    <span className="font-bold text-gray-800">{day.tempMax}°</span>
+                    <span className="text-sm font-medium text-gray-400">{day.tempMin}°</span>
+                  </div>
+                  
+                  <div className="w-12 text-right">
+                    <div className="flex items-center justify-end gap-1 text-[10px] font-bold text-blue-500">
+                      <CloudRain size={10} /> {day.pop}%
+                    </div>
+                    <div className="text-[9px] text-gray-400">{day.rainMm > 0 ? `${day.rainMm}mm` : '-'}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
         </div>
       </div>
       
